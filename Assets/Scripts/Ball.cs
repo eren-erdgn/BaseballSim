@@ -1,19 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Ball : MonoBehaviour
 {
     private bool _isBallMoving;
     private Vector3 _targetPosition;
     private Vector3 _startPosition;
-    private float _speed = 8.0f;
+    private float _speed = 8.5f;
     private float _lerpTime = 0.0f;
     private Vector3 _firstBaseCatcherPos;
     private Vector3 _nextBaseCatcherPos;
+    private Vector3 _lastBaseCatcherPos;
     [SerializeField] private Transform hitArea;
     [SerializeField] private float curveHeight = 5.0f;
+    private GameManager gameManager;
 
     private void OnEnable()
     {
@@ -33,6 +37,11 @@ public class Ball : MonoBehaviour
         Events.OnBallGoesToNextBaseCatcher.RemoveListener(ThrowNextBaseCatcher);
     }
 
+    private void Start()
+    {
+        gameManager = GameManager.Instance;
+        _lastBaseCatcherPos = BaseCatcherManager.Instance.GetPosOfLastBaseCathcer(2);
+    }
 
     // ... (other existing methods)
 
@@ -47,16 +56,23 @@ public class Ball : MonoBehaviour
             Vector3 currentPos = CalculateBezierPoint(_startPosition, _targetPosition, curveHeight, t);
 
             gameObject.transform.position = currentPos;
-
             if (t >= 1.0f)
             {
                 _isBallMoving = false;
+                if(_targetPosition == _lastBaseCatcherPos && gameManager.CurrentState == GameState.Playing)
+                { 
+                    Debug.Log("BaseCatcher won Game Ended");
+                    Events.OnBallAtLastBaseCatcher.Invoke();
+                    gameManager.ChangeState(GameState.End);
+                }
                 if (_targetPosition == hitArea.position)
                 {
                     Events.OnBallAtHitArea.Invoke();
                 }
+                
             }
         }
+        
     }
 
     Vector3 CalculateBezierPoint(Vector3 start, Vector3 end, float height, float t)
@@ -112,6 +128,7 @@ public class Ball : MonoBehaviour
     }
     private void ThrowNextBaseCatcher(Vector3 nextBaseCatcher)
     {
+        
         _nextBaseCatcherPos = nextBaseCatcher;
         _isBallMoving = true;
         _startPosition = transform.position;

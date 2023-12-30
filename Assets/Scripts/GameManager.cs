@@ -2,11 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     private GameState _state;
+    
 
     private void Awake()
     {
@@ -15,16 +17,34 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentState => _state;
 
+   
+
     private void Start()
     {
         ChangeState(GameState.Start);
     }
     private void Update()
     {
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            PlayerPrefs.DeleteKey("cathcerScoreValue");
+            PlayerPrefs.DeleteKey("pitcherScoreValue");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            
+        }
         if(Input.GetKeyDown(KeyCode.Space) && CurrentState != GameState.Playing) 
         {
-            Events.OnGameStart.Invoke();
-            ChangeState(GameState.Playing);
+            if(GameState.End == CurrentState)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+            else
+            {
+                Events.OnGameStart.Invoke();
+                ChangeState(GameState.Playing);
+            }
+            
+            
         }
     }
 

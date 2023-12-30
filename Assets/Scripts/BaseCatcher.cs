@@ -24,6 +24,7 @@ public class BaseCatcher : MonoBehaviour
     {
         if (manager.GetIndexOfBaseCatcher(_baseCatcher) == 2)
         {
+            
             _isGameEnded = true;
         }
 
@@ -45,7 +46,8 @@ public class BaseCatcher : MonoBehaviour
     {
         
         isBallLooping = false;
-        _nextBaseCatcherPos = manager.GetPosOfNextBaseCathcer(manager.GetIndexOfBaseCatcher(_baseCatcher));
+        _nextBaseCatcherPos = manager.GetPosOfNextBaseCathcer(manager.GetIndexOfBaseCatcher(_baseCatcher)); 
         Events.OnBallGoesToNextBaseCatcher.Invoke(_nextBaseCatcherPos);
+        
     }
 }

@@ -9,6 +9,7 @@ public class Pitcher : MonoBehaviour
     NavMeshAgent agent;
     private int currentTargetIndex = 0;
     private bool isMoving = false;
+    private GameManager gameManager;
 
     private void OnEnable()
     {
@@ -22,6 +23,7 @@ public class Pitcher : MonoBehaviour
 
     void Start()
     {
+        gameManager = GameManager.Instance;
         agent = GetComponent<NavMeshAgent>();
     }
 
@@ -32,10 +34,17 @@ public class Pitcher : MonoBehaviour
         {
             
             currentTargetIndex = (currentTargetIndex + 1) % targets.Length;
-            if (currentTargetIndex == 0)
+            if (currentTargetIndex == 0 )
             {
+                
                 isMoving = false;
-               
+                if (gameManager.CurrentState == GameState.Playing)
+                {
+                    Debug.Log("Pitcher won Game Ended");
+                    Events.OnPitcherAtLastBase.Invoke();
+                    gameManager.ChangeState(GameState.End);
+                }
+                
             }
             else
             {

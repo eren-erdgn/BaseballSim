@@ -11,4 +11,6 @@ public static class Events
     public static readonly EventActions<Vector3> OnBallHitted = new EventActions<Vector3>();
     public static readonly EventActions<Vector3> OnBallCatched = new EventActions<Vector3>();
     public static readonly EventActions<Vector3> OnBallGoesToNextBaseCatcher= new EventActions<Vector3>();
+    public static readonly EventActions OnBallAtLastBaseCatcher = new EventActions();
+    public static readonly EventActions OnPitcherAtLastBase = new EventActions();
 }

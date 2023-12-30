@@ -12,6 +12,12 @@ public class BaseCatcherManager : MonoBehaviour
     {
         Instance = this;
     }
+    public Vector3 GetPosOfLastBaseCathcer(int BaseCatcherIndex)
+    {
+        
+        return baseCatchers[BaseCatcherIndex].transform.position; 
+
+    }
     public Vector3 GetPosOfNextBaseCathcer(int currentBaseCatcherIndex)
     {
         
